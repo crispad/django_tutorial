@@ -43,6 +43,9 @@ class Order(models.Model):
     status = models.CharField(max_length=200, null=True, choices=STATUS)
 
 
+    def __str__(self):
+        return self.product.name
+
  
 
 
