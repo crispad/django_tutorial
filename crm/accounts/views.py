@@ -13,13 +13,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
+from .decorators import unauthenticated_user
 
-
+@unauthenticated_user
 def registerPage(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
-        form = CreateUserForm()
+    form = CreateUserForm()
 
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -32,14 +30,11 @@ def registerPage(request):
     context = {'form': form}
     return render(request, 'accounts/register.html', context)
 
-
+@unauthenticated_user
 def loginPage(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
 
@@ -48,10 +43,8 @@ def loginPage(request):
             return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
-
     context = {}
     return render(request, 'accounts/login.html', context)
-
 
 def logoutUser(request):
     logout(request)
@@ -72,6 +65,10 @@ def home(request):
     context = {'orders': orders, 'customers': customers,
                'total_orders': total_orders, 'delivered': delivered, 'pending': pending}
     return render(request, 'accounts/dashboard.html', context)
+
+def userPage(request):
+    context = {}
+    return render(request, 'accounts/user.html', context)
 
 
 @login_required(login_url='login')
