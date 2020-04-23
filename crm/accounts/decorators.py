@@ -15,7 +15,7 @@ def allowed_users(allowed_roles=[]):
         def wrapper_func(request, *args, **kwargs):
 
             group = None
-            if request.users.groups.exists():
+            if request.user.groups.exists():
                 group = request.user.groups.all()[0].name
 
             if group in allowed_roles:
@@ -29,13 +29,13 @@ def allowed_users(allowed_roles=[]):
 def admin_only(view_func):
     def wrapper_function(request, *args, **kwargs):
         group = None
-    if request.user.groups.exists()
-        group = request.user.groups.all()[0].name
+        if request.user.groups.exists():
+            group = request.user.groups.all()[0].name
 
-    if group == 'customer':
-        group = redirect('user-page')
+        if group == 'Customer':
+           return redirect('user-page')
 
-    if group == 'admin':
-        return view_func(request, *args, **kwargs)
+        if group == 'Admin':
+            return view_func(request, *args, **kwargs)
 
     return wrapper_function
